@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f3f3f3;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input[type="number"], input[type="checkbox"] {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+
+        button:active {
+            transform: scale(1);
+        }
+
+        #password {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            word-wrap: break-word;
+            max-width: 100%;
+            overflow: hidden;
+            background-color: #fff;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            width: 60%;
+        }
+
+        .options {
+            margin: 20px 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #history {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        #history h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #history li {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #555;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generator Password Acak</h1>
+    <label for="length">Panjang Password:</label>
+    <input type="number" id="length" min="6" max="20" value="12"><br>
+
+    <div class="options">
+        <label><input type="checkbox" id="lowercase"> Huruf Kecil (a-z)</label><br>
+        <label><input type="checkbox" id="uppercase"> Huruf Besar (A-Z)</label><br>
+        <label><input type="checkbox" id="numbers"> Angka (0-9)</label><br>
+        <label><input type="checkbox" id="symbols"> Simbol (!@#$%^&*)</label><br>
+        <label><input type="checkbox" id="name"> Masukkan Nama (RNMD)</label>
+    </div>
+
+    <button onclick="generatePassword()">Buat Password</button>
+
+    <div class="container">
+        <div id="password"></div>
+        <button class="copy-btn" id="copyBtn" onclick="copyPassword()">Copy</button>
+    </div>
+
+    <div id="history">
+        <h2>Riwayat Password</h2>
+        <ul id="passwordHistory"></ul>
+    </div>
+
+    <script>
+        function generatePassword() {
+            const length = document.getElementById('length').value;
+            const useLowercase = document.getElementById('lowercase').checked;
+            const useUppercase = document.getElementById('uppercase').checked;
+            const useNumbers = document.getElementById('numbers').checked;
+            const useSymbols = document.getElementById('symbols').checked;
+            const useName = document.getElementById('name').checked;
+
+            let charset = '';
+            if (useLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (useUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (useNumbers) charset += '0123456789';
+            if (useSymbols) charset += '!@#$%^&*()_+[]{}|;:,.<>?';
+            if (useName) charset += 'RNMD'; // Menambahkan nama ke karakter
+
+            // Menambahkan password contoh
+            charset += 'rnmd7282#';
+            charset += 'Rnmd636372#';
+
+            if (charset === '') {
+                document.getElementById('password').textContent = 'Pilih set karakter untuk password!';
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+
+            document.getElementById('password').textContent = password;
+        }
+
+        function copyPassword() {
+            const passwordText = document.getElementById('password').textContent;
+            if (!passwordText) return alert('Password belum dibuat!');
+            
+            const textArea = document.createElement('textarea');
+            textArea.value = passwordText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Password berhasil disalin!');
+
+            // Tambahkan password ke riwayat
+            const historyList = document.getElementById('passwordHistory');
+            const listItem = document.createElement('li');
+            listItem.textContent = passwordText;
+            historyList.appendChild(listItem);
+        }
+    </script>
+</body>
+  </html>
